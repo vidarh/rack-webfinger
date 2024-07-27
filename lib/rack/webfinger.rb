@@ -10,7 +10,7 @@ module Rack
       @data_provider = data_provider
     end
 
-    def not_found = [404, { 'Content-Type' => 'text/plain' }, ['Resource not found']]
+    def not_found = [404, { 'content-type' => 'text/plain' }, ['Resource not found']]
             
     def call(env)
       request = Rack::Request.new(env)
@@ -20,7 +20,7 @@ module Rack
       resource = request.params['resource']
 
       if !resource
-        return [400, { 'Content-Type' => 'text/plain' }, ['Missing resource parameter']]
+        return [400, { 'content-type' => 'text/plain' }, ['Missing resource parameter']]
       end
 
       # We need this because Rack's handling of the query string by default overwrites
@@ -41,7 +41,7 @@ module Rack
       filtered_data = filter_by_rel(response_data, rel_params)
 
       [200,
-        { 'Content-Type' => 'application/jrd+json' },
+        { 'content-type' => 'application/jrd+json' },
         [JSON.generate(filtered_data)]
       ]
     end
