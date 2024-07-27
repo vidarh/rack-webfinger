@@ -26,7 +26,6 @@ RSpec.describe Rack::Webfinger do
           { rel: 'http://webfinger.net/rel/profile-page', type: 'text/html', href: 'https://example.com/user' },
           { rel: 'http://schemas.google.com/g/2010#updates-from', type: 'application/atom+xml', href: 'https://example.com/user/feed' }
         ]
-        p rel_params
         filtered_links = rel_params.empty? ? links : links.select do |link|
           rel_params.include?(link[:rel])
         end
