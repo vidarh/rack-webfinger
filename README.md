@@ -16,7 +16,33 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-TODO: Write usage instructions here
+In your `config.ru` add:
+
+```ruby
+    require 'rack/webfinger'
+
+    use Rack::Webfinger, provider
+```
+
+`provider` must be a callable (lambda, proc, class responding to `#
+call`) that takes a resource name and an array of rel filters in.
+You can choose to ignore the rel filters - filtering will be done for
+you.
+
+You need to return a Hash of this format:
+
+```
+    {
+      aliases: ["list","of","aliases"],
+      links: [
+        { "rel": "rel url", "type": "text/html", "href": "link" }
+      ]
+    }
+```
+
+This will be simplified, with constants for common rel values, and
+defaults available.
+
 
 ## Development
 

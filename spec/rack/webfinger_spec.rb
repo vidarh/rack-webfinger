@@ -38,7 +38,14 @@ RSpec.describe Rack::Webfinger do
   end
 
   context 'with non-filtering data provider' do
-    let(:app) { Rack::Webfinger.new(non_filtering_provider) }
+    # Test it as middleware
+    let(:app) do
+      provider = non_filtering_provider
+      Rack::Builder.new do
+        use(Rack::Webfinger, provider)
+        run(-> { [200, {}, ["OK"]] })
+      end
+    end
 
     it 'returns all links when no rel parameter is provided' do
       get '/.well-known/webfinger?resource=user@example.com'
@@ -57,7 +64,8 @@ RSpec.describe Rack::Webfinger do
   end
 
   context 'with filtering data provider' do
-    let(:app) { Rack::Webfinger.new(filtering_provider) }
+    # Test it as app
+    let(:app) { Rack::Webfinger.new(nil, filtering_provider) }
 
     it 'returns all links when no rel parameter is provided' do
       get '/.well-known/webfinger?resource=user@example.com'
@@ -83,7 +91,7 @@ RSpec.describe Rack::Webfinger do
   end
 
   context 'general behavior' do
-    let(:app) { Rack::Webfinger.new(non_filtering_provider) }
+    let(:app) { Rack::Webfinger.new(nil, non_filtering_provider) }
 
     it 'returns 404 for non-webfinger paths' do
       get '/some-other-path'

@@ -6,7 +6,8 @@ require_relative "webfinger/version"
 
 module Rack
   class Webfinger
-    def initialize(data_provider)
+    def initialize(app, data_provider)
+      @app = app
       @data_provider = data_provider
     end
 
@@ -15,7 +16,10 @@ module Rack
     def call(env)
       request = Rack::Request.new(env)
 
-      return not_found if request.path != '/.well-known/webfinger'
+      if request.path != '/.well-known/webfinger'
+        return @app.call(env) if @app
+        return not_found
+      end
       
       resource = request.params['resource']
 
